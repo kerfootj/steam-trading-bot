@@ -1,0 +1,20 @@
+{
+	"name": "steam-trading-bot",
+	"version": "0.1.0",
+	"description": "a steam trading bot that does something",
+	"private": false,
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/kerfootj/steam-trading-bot"
+	},
+	"dependencies": {
+		"steam-totp": "^2.1.0",
+		"steam-tradeoffer-manager": "^2.9.5",
+		"steam-user": "^4.5.0",
+		"steamcommunity": "^3.39.0"
+	},
+	"scripts": {
+		"start": "node index.js"
+	}
+}
