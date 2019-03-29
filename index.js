@@ -59,8 +59,6 @@ client.on("friendRelationship", (steamid, relationship) => {
 
 client.on("friendMessage", (sender, message) => {
 	if (message.toUpperCase().match("!ITEMS")) {
-		console.log(sender.getSteamID64())
-		console.log(message)
 		client.chatMessage(sender, "Getting your items...")
 		steaminventory.getinventory(730, sender.getSteamID64(), (err, data) => {
 			console.log(err)
@@ -70,6 +68,9 @@ client.on("friendMessage", (sender, message) => {
 	} else {
 		client.chatMessage(sender, "Sorry I don't recognise that command")
 	}
+	console.log(sender.getSteamID64())
+	console.log(message)
+	client.leaveChat(sender.getSteamID64())
 })
 
 /* Trade Manager newOffer Event Listener */
