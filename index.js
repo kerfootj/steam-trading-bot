@@ -11,6 +11,7 @@
 const SteamUser = require("steam-user")
 const SteamTotp = require("steam-totp")
 const SteamCommunity = require("steamcommunity")
+const steaminventory = require("get-steam-inventory")
 const TradeOfferManager = require("steam-tradeoffer-manager")
 
 const CONFIG = require("./settings/config.js")
@@ -40,6 +41,14 @@ client.on("loggedOn", () => {
 	client.gamesPlayed(730)
 })
 
+/* Steam Client webSession Event Listener */
+client.on("webSession", (sessionid, cookies) => {
+	manager.setCookies(cookies)
+
+	community.setCookies(cookies)
+	community.startConfirmationChecker(10000, CONFIG.IDENTITYSECRET)
+})
+
 client.on("friendRelationship", (steamid, relationship) => {
 	/* Pending Invite */
 	if (relationship === 2) {
@@ -48,12 +57,19 @@ client.on("friendRelationship", (steamid, relationship) => {
 	}
 })
 
-/* Steam Client webSession Event Listener */
-client.on("webSession", (sessionid, cookies) => {
-	manager.setCookies(cookies)
-
-	community.setCookies(cookies)
-	community.startConfirmationChecker(10000, CONFIG.IDENTITYSECRET)
+client.on("friendMessage", (sender, message) => {
+	if (message.toUpperCase().match("!ITEMS")) {
+		console.log(sender.getSteamID64())
+		console.log(message)
+		client.chatMessage(sender, "Getting your items...")
+		steaminventory.getinventory(730, sender.getSteamID64(), (err, data) => {
+			console.log(err)
+			console.log(data)
+			client.chatMessage(sender, data.marketnames.join("\n"))
+		})
+	} else {
+		client.chatMessage(sender, "Sorry I don't recognise that command")
+	}
 })
 
 /* Trade Manager newOffer Event Listener */
